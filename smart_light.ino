@@ -6,11 +6,15 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <Servo.h>
+#include <EEPROM.h>         //it writes either a 1 or 0 to memory, so it can remember what state to be in if it turns off
 
 Servo motor;
- 
+
 const char* ssid = "XXXXXXXX";    //enter the WiFi SSID and password 
 const char* password = "XXXXXXXX";
+
+int addr = 0;                  //address where state information will be help
+int data;
 
 ESP8266WebServer server(80); //Declaring a global object variable from the ESP8266WebServer on port 80
 
@@ -57,17 +61,28 @@ void lightOff(){
   motor.write(170);
   motor.write(166);
   delay(500);
+  EEPROM.put(addr,0);
+  EEPROM.commit();
 }
 
 void lightOn(){                          
   motor.write(2);
   delay(500);
+  EEPROM.put(addr,1);
+  EEPROM.commit();
 }
 
 //---------------------------------------------------------------SETUP
 void setup(void){
+  EEPROM.begin(512);
+  motor.attach(2);                // Connects the servo
   WiFi.begin(ssid, password);     //Connect to your WiFi router
-  motor.attach(2);               // Connects the servo
+  EEPROM.get(addr,data);          //reading what the current state is
+  if(data){
+    lightOn();
+  }else{
+    lightOff();
+  }
   
   while (WiFi.status() != WL_CONNECTED) {     // Wait for connection
     delay(500);
