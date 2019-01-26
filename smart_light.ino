@@ -1,3 +1,4 @@
+
 /*
  * -this is basically the same as the smart door lock. in the future, im going to combine them into 1 program
  * -there has been  a basic web app made with "MIT AI2 App Inventor"
@@ -6,15 +7,17 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <Servo.h>
-#include <EEPROM.h>         //it writes either a 1 or 0 to memory, so it can remember what state to be in if it turns off
+#include <EEPROM.h>         //writes either a 1 or 0 to memory, so it can remember what state to be in if it turns off
 
 Servo motor;
+int led = 2;
+int button = 5;
 
 const char* ssid = "XXXXXXXX";    //enter the WiFi SSID and password 
 const char* password = "XXXXXXXX";
 
 int addr = 0;                  //address where state information will be help
-int data;
+int data;                      //variable for the state information
 
 ESP8266WebServer server(80); //Declaring a global object variable from the ESP8266WebServer on port 80
 
@@ -72,10 +75,30 @@ void lightOn(){
   EEPROM.commit();
 }
 
+void toggle(){
+  int state;
+  EEPROM.get(addr,state);
+  if(state){
+    lightOff();
+  }else{
+    lightOn();
+  }
+}
+
+void buttonCheck(){
+  if(!digitalRead(button)){
+    toggle();
+  }else{
+    return;
+  }
+}
+
+
 //---------------------------------------------------------------SETUP
-void setup(void){
+void setup(){
   EEPROM.begin(512);
-  motor.attach(2);                // Connects the servo
+  motor.attach(4);                // Connects the servo
+  pinMode(button, INPUT);
   WiFi.begin(ssid, password);     //Connect to your WiFi router
   EEPROM.get(addr,data);          //reading what the current state is
   if(data){
@@ -93,9 +116,12 @@ void setup(void){
   server.on("/sQICgRJK1lEyPX7plaHjJ5fo5Jz6c2TbWIP4nPORkh8oK5mnrnOC63rEipxfV9", handleLIGHTOFF);
  
   server.begin();                  //Start server
+  pinMode(led, OUTPUT);
+  digitalWrite(led, HIGH);
 }
 
 //---------------------------------------------------------------LOOP
-void loop(void){
+void loop(){
   server.handleClient();          //Handle client requests
+  buttonCheck();
 }
