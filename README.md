@@ -2,10 +2,10 @@
 
 This is a smart home system (in progress) using an ESP8266 as a webserver and Arduino Nanos as nodes controlling devices. They are controlled wirelessly from the webserver using XBee modules.
 
-Photos:
-The web interface of the system                     https://imgur.com/kPSRz5h
-Photo of ESP8266 setup                              https://imgur.com/82eiyB4
-Photo of Arduino Nano                               https://imgur.com/9d0VWtm
+  Picture:
+    The web interface of the system                     https://imgur.com/kPSRz5h
+    Photo of ESP8266 setup                              https://imgur.com/82eiyB4
+    Photo of Arduino Nano                               https://imgur.com/9d0VWtm
 
 
 
