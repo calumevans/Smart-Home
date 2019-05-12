@@ -17,3 +17,4 @@ The linear actuator used is modified from one found at https://www.thingiverse.c
     Photo of smart light switch                             https://imgur.com/oEGxQhw
     Android app screenshot                                  https://imgur.com/rZjCFy7
 
+ 
